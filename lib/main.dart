@@ -160,6 +160,8 @@ class _MyHomePageState extends State<MyHomePage> {
       final double confidence = label.confidence;
 
       print('$text $index $confidence');
+
+      _recognizedProduct(text);
     }
 
     await imageLabeler.close();

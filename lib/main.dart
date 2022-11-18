@@ -164,4 +164,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
     await imageLabeler.close();
   }
+
+  void _recognizedProduct(String product) async {
+    // TODO: Show the sheet
+  }
 }

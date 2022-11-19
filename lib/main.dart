@@ -82,43 +82,72 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
       body: controller.value.isInitialized
           ? Builder(builder: (context) {
-              return GestureDetector(
-                onTap: () {
-                  _processImage(context);
-                },
-                child: CameraPreview(controller),
+              return Stack(
+                children: [
+                  Positioned.fill(
+                    child: CameraPreview(controller),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.all(40),
+                        color: Colors.black.withOpacity(0.5),
+                        child: Text(
+                          "Point your camera at your product to see how to recycle it",
+                          textAlign: TextAlign.center,
+                          style: TextStyle(fontSize: 25, color: Colors.white),
+                        ),
+                      ),
+                      Spacer(),
+                      Container(
+                        padding: EdgeInsets.all(40),
+                        color: Colors.black.withOpacity(0.5),
+                        child: CircleAvatar(
+                          backgroundColor: Colors.white,
+                          child: IconButton(
+                            onPressed: () {
+                              _processImage(context);
+                            },
+                            icon: Icon(
+                              Icons.camera_alt,
+                              color: Colors.black,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               );
             })
           : const SizedBox.shrink(),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        // currentIndex: _currentIndex,
-        // onTap: _updateIndex,
-        selectedItemColor: Colors.blue[700],
-        //selectedFontSize: 13,
-        //unselectedFontSize: 13,
-        iconSize: 40,
+      // bottomNavigationBar: BottomNavigationBar(
+      //   type: BottomNavigationBarType.fixed,
+      //   // currentIndex: _currentIndex,
+      //   // onTap: _updateIndex,
+      //   selectedItemColor: Colors.blue[700],
+      //   //selectedFontSize: 13,
+      //   //unselectedFontSize: 13,
+      //   iconSize: 40,
 
-        items: [
-          BottomNavigationBarItem(
-            label: "",
-            icon: Icon(Icons.home),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Icon(Icons.camera_alt),
-          ),
-          BottomNavigationBarItem(
-            label: "",
-            icon: Icon(Icons.person),
-          ),
-        ],
-      ),
+      //   items: [
+      //     BottomNavigationBarItem(
+      //       label: "",
+      //       icon: Icon(Icons.home),
+      //     ),
+      //     BottomNavigationBarItem(
+      //       label: "",
+      //       icon: Icon(Icons.camera_alt),
+      //     ),
+      //     BottomNavigationBarItem(
+      //       label: "",
+      //       icon: Icon(Icons.person),
+      //     ),
+      //   ],
+      // ),
     );
   }
 
@@ -196,11 +225,17 @@ class _MyHomePageState extends State<MyHomePage> {
     if (product == "retros_sweet_box") {
       _itemRecycalable(context);
     }
-    if (product == "quality_street") {
+    if (product == "quality_street_box") {
       _itemRecycalable(context);
     }
     if (product == "plastic_water_bottle") {
       _itemRecycalable(context);
+    }
+    if (product == "flipchart_markers_box") {
+      _itemRecycalable(context);
+    }
+    if (product == "cadbury_chocolate_fingers") {
+      _itemNotRecycalable(context);
     }
   }
 
@@ -209,14 +244,24 @@ class _MyHomePageState extends State<MyHomePage> {
       context: context,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
       builder: (BuildContext context) {
-        return const InfoBottomSheet();
+        return const InfoBottomSheetRecyclable();
+      },
+    );
+  }
+
+  void _itemNotRecycalable(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+      builder: (BuildContext context) {
+        return const InfoBottomSheetNotRecyclable();
       },
     );
   }
 }
 
-class InfoBottomSheet extends StatelessWidget {
-  const InfoBottomSheet({super.key});
+class InfoBottomSheetRecyclable extends StatelessWidget {
+  const InfoBottomSheetRecyclable({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -253,6 +298,39 @@ class InfoBottomSheet extends StatelessWidget {
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
           SizedBox(height: 100),
+        ],
+      ),
+    );
+  }
+}
+
+class InfoBottomSheetNotRecyclable extends StatelessWidget {
+  const InfoBottomSheetNotRecyclable({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          SizedBox(height: 20),
+          Icon(
+            Icons.close_outlined,
+            size: 80,
+            color: Colors.red,
+          ),
+          Text(
+            'This item isn\'t recyclable!',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+          ),
+          SizedBox(height: 20),
+          Text(
+            'Please put this item in the general waste to avoid contaminating a recycling batch',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+          SizedBox(height: 20),
         ],
       ),
     );

@@ -82,19 +82,44 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          title: Text(widget.title),
-        ),
-        body: controller.value.isInitialized
-            ? Builder(builder: (context) {
-                return GestureDetector(
-                  onTap: () {
-                    _processImage(context);
-                  },
-                  child: CameraPreview(controller),
-                );
-              })
-            : const SizedBox.shrink());
+      appBar: AppBar(
+        title: Text(widget.title),
+      ),
+      body: controller.value.isInitialized
+          ? Builder(builder: (context) {
+              return GestureDetector(
+                onTap: () {
+                  _processImage(context);
+                },
+                child: CameraPreview(controller),
+              );
+            })
+          : const SizedBox.shrink(),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        // currentIndex: _currentIndex,
+        // onTap: _updateIndex,
+        selectedItemColor: Colors.blue[700],
+        //selectedFontSize: 13,
+        //unselectedFontSize: 13,
+        iconSize: 40,
+
+        items: [
+          BottomNavigationBarItem(
+            label: "",
+            icon: Icon(Icons.home),
+          ),
+          BottomNavigationBarItem(
+            label: "",
+            icon: Icon(Icons.camera_alt),
+          ),
+          BottomNavigationBarItem(
+            label: "",
+            icon: Icon(Icons.person),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<String> _getModel(String assetPath) async {

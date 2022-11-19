@@ -3,7 +3,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_image_labeling/google_mlkit_image_labeling.dart';
-import 'package:path/path.dart';
+import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 late List<CameraDescription> _cameras;
@@ -86,14 +86,14 @@ class _MyHomePageState extends State<MyHomePage> {
           title: Text(widget.title),
         ),
         body: controller.value.isInitialized
-            ? FittedBox(
-                child: GestureDetector(
+            ? Builder(builder: (context) {
+                return GestureDetector(
                   onTap: () {
-                    _processImage();
+                    _processImage(context);
                   },
                   child: CameraPreview(controller),
-                ),
-              )
+                );
+              })
             : const SizedBox.shrink());
   }
 
@@ -102,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage> {
       return 'flutter_assets/$assetPath';
     }
     final path = '${(await getApplicationSupportDirectory()).path}/$assetPath';
-    await io.Directory(dirname(path)).create(recursive: true);
+    await io.Directory(p.dirname(path)).create(recursive: true);
     final file = io.File(path);
     if (!await file.exists()) {
       final byteData = await rootBundle.load(assetPath);
@@ -112,7 +112,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return file.path;
   }
 
-  void _processImage() async {
+  void _processImage(BuildContext context) async {
     final WriteBuffer allBytes = WriteBuffer();
     for (final Plane plane in _cameraImage!.planes) {
       allBytes.putUint8List(plane.bytes);
@@ -161,13 +161,75 @@ class _MyHomePageState extends State<MyHomePage> {
 
       print('$text $index $confidence');
 
-      _recognizedProduct(text);
+      _recognizedProduct(context, text);
     }
 
     await imageLabeler.close();
   }
 
-  void _recognizedProduct(String product) async {
-    // TODO: Show the sheet
+  void _recognizedProduct(BuildContext context, String product) async {
+    if (product == "retros_sweet_box") {
+      _itemRecycalable(context);
+    }
+    if (product == "quality_street") {
+      _itemRecycalable(context);
+    }
+    if (product == "plastic_water_bottle") {
+      _itemRecycalable(context);
+    }
+  }
+
+  void _itemRecycalable(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+      builder: (BuildContext context) {
+        return const InfoBottomSheet();
+      },
+    );
+  }
+}
+
+class InfoBottomSheet extends StatelessWidget {
+  const InfoBottomSheet({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          SizedBox(height: 20),
+          Image.asset(
+            "assets/check.png",
+            width: 80.0,
+          ),
+          Text(
+            'This item is recyclable!',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+          ),
+          SizedBox(height: 100),
+          Text(
+            'Where to recycle?',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Text(
+            'Recycling Center',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 25),
+          ),
+          SizedBox(height: 50),
+          Text(
+            'Nearest recycling center:',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+          Text(
+            'Morse Road, Horsham St Faith, Norwich NR10 3JX',
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+          ),
+          SizedBox(height: 100),
+        ],
+      ),
+    );
   }
 }

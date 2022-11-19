@@ -87,11 +87,43 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
         body: controller.value.isInitialized
             ? Builder(builder: (context) {
-                return GestureDetector(
-                  onTap: () {
-                    _processImage(context);
-                  },
-                  child: CameraPreview(controller),
+                return Stack(
+                  children: [
+                    Positioned.fill(
+                      child: CameraPreview(controller),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.all(40),
+                          color: Colors.black.withOpacity(0.5),
+                          child: Text(
+                            "Point your camera at your product to see how to recycle it",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 25, color: Colors.white),
+                          ),
+                        ),
+                        Spacer(),
+                        Container(
+                          padding: EdgeInsets.all(40),
+                          color: Colors.black.withOpacity(0.5),
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            child: IconButton(
+                              onPressed: () {
+                                _processImage(context);
+                              },
+                              icon: Icon(
+                                Icons.camera_alt,
+                                color: Colors.black,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 );
               })
             : const SizedBox.shrink());

@@ -99,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> {
                           padding: EdgeInsets.all(40),
                           color: Colors.black.withOpacity(0.5),
                           child: Text(
-                            "Point your camera at your product to see how to recycle it",
+                            'Point your camera at your product to see how to recycle it',
                             textAlign: TextAlign.center,
                             style: TextStyle(fontSize: 25, color: Colors.white),
                           ),
@@ -234,7 +234,7 @@ class InfoBottomSheet extends StatelessWidget {
         children: <Widget>[
           SizedBox(height: 20),
           Image.asset(
-            "assets/check.png",
+            'assets/check.png',
             width: 80.0,
           ),
           Text(
